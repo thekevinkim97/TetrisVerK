@@ -1,4 +1,4 @@
-package sample;
+package App;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -16,8 +16,7 @@ public class Main extends Application {
         primaryStage.show();
     }
 
-
-    public static void main(String[] args) {
+    public static void main(String[] args){
         launch(args);
     }
 }
