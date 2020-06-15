@@ -5,6 +5,8 @@ import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
+import java.util.Arrays;
+
 public class Tetris extends Application {
 
     public static final int moveSpeed = 25;
@@ -21,9 +23,16 @@ public class Tetris extends Application {
     private static boolean game = true;
     private static Form nextObj = Controller.makeRect();
 
+    public void main(String[] args) {
+        launch(args);
+    }
+
+
     @Override
     public void start(Stage arg0) throws Exception {
-
+        for (int[] a: playGrid) {
+            Arrays.fill(a, 0);
+        }
     }
 
 }

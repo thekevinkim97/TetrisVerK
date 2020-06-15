@@ -42,7 +42,7 @@ public class Controller {
         }
     }
 
-
+    
     public static Form makeRect() {
         int block = (int) (Math.random() * 100);
         String name;
@@ -52,6 +52,110 @@ public class Controller {
                 blockC = new Rectangle(blockSize -1, blockSize-1),
                 blockD = new Rectangle(blockSize -1, blockSize-1);
 
-        
+        if (block < 15) {
+            name = "j";
+            return createJBlock(blockA, blockB, blockC, blockD, name);
+        }
+        else if (block < 30) {
+            name = "l";
+            return createLBlock(blockA, blockB, blockC, blockD, name);
+        }
+        else if (block < 45) {
+            name = "o";
+            return createOBlock(blockA, blockB, blockC, blockD, name);
+        }
+        else if (block < 60) {
+            name = "s";
+            return createSBlock(blockA, blockB, blockC, blockD, name);
+        }
+        else if (block < 75) {
+            name = "t";
+            return createTBlock(blockA, blockB, blockC, blockD, name);
+        }
+        else if (block < 90) {
+            name = "z";
+            return createZBlock(blockA, blockB, blockC, blockD, name);
+        }
+        else {
+            name = "i";
+            return createIBlock(blockA, blockB, blockC, blockD, name);
+        }
+    }
+
+    public static Form createJBlock(Rectangle blockA, Rectangle blockB, Rectangle blockC, Rectangle blockD, String name) {
+        blockA.setX(xMax / 2 - blockSize);
+        blockB.setX(xMax / 2 - blockSize);
+        blockB.setY(blockSize);
+        blockC.setX(xMax / 2);
+        blockC.setY(blockSize);
+        blockD.setX(xMax / 2 + blockSize);
+        blockD.setY(blockSize);
+
+        return new Form(blockA, blockB, blockC, blockD, name);
+    }
+
+    public static Form createLBlock(Rectangle blockA, Rectangle blockB, Rectangle blockC, Rectangle blockD, String name) {
+        blockA.setX(xMax / 2 + blockSize);
+        blockB.setX(xMax / 2 - blockSize);
+        blockB.setY(blockSize);
+        blockC.setX(xMax / 2);
+        blockC.setY(blockSize);
+        blockD.setX(xMax / 2 + blockSize);
+        blockD.setY(blockSize);
+
+        return new Form(blockA, blockB, blockC, blockD, name);
+    }
+
+    public static Form createOBlock(Rectangle blockA, Rectangle blockB, Rectangle blockC, Rectangle blockD, String name) {
+        blockA.setX(xMax / 2 - blockSize);
+        blockB.setX(xMax / 2);
+        blockB.setY(xMax / 2 - blockSize);
+        blockC.setX(blockSize);
+        blockD.setX(xMax / 2);
+        blockD.setY(blockSize);
+
+        return new Form(blockA, blockB, blockC, blockD, name);
+    }
+
+    public static Form createSBlock(Rectangle blockA, Rectangle blockB, Rectangle blockC, Rectangle blockD, String name) {
+        blockA.setX(xMax / 2 + blockSize);
+        blockB.setX(xMax / 2);
+        blockB.setY(xMax / 2);
+        blockC.setY(blockSize);
+        blockD.setX(xMax / 2 - blockSize);
+        blockD.setY(blockSize);
+
+        return new Form(blockA, blockB, blockC, blockD, name);
+    }
+
+    public static Form createTBlock(Rectangle blockA, Rectangle blockB, Rectangle blockC, Rectangle blockD, String name) {
+        blockA.setX(xMax / 2 - blockSize);
+        blockB.setX(xMax / 2);
+        blockB.setY(xMax / 2);
+        blockC.setY(blockSize);
+        blockD.setX(xMax / 2 + blockSize);
+        blockD.setY(blockSize);
+
+        return new Form(blockA, blockB, blockC, blockD, name);
+    }
+
+    public static Form createZBlock(Rectangle blockA, Rectangle blockB, Rectangle blockC, Rectangle blockD, String name) {
+        blockA.setX(xMax / 2 + blockSize);
+        blockB.setX(xMax / 2);
+        blockB.setY(xMax / 2 + blockSize);
+        blockC.setY(blockSize);
+        blockD.setX(xMax / 2 + blockSize + blockSize);
+        blockD.setY(blockSize);
+
+        return new Form(blockA, blockB, blockC, blockD, name);
+    }
+
+    public static Form createIBlock(Rectangle blockA, Rectangle blockB, Rectangle blockC, Rectangle blockD, String name) {
+        blockA.setX(xMax / 2 - blockSize - blockSize);
+        blockB.setX(xMax / 2 - blockSize);
+        blockB.setY(xMax / 2);
+        blockD.setX(xMax / 2 + blockSize);
+
+        return new Form(blockA, blockB, blockC, blockD, name);
     }
 }
