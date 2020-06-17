@@ -25,6 +25,33 @@ public class Controller {
             }
         }
     }
+    public static void moveTurn (Form form) {
+        int f = form.form;
+        Rectangle blockA = form.blockA;
+        Rectangle blockB = form.blockB;
+        Rectangle blockC = form.blockC;
+        Rectangle blockD = form.blockD;
+        switch (form.getName()) {
+            case "j":
+                if ((f == 1 && checkBlock(blockA, 1, -1) && checkBlock(blockC, -1, -1) && checkBlock(blockD, -2, -2)) || (f == 2 && checkBlock(blockA, -1, -1) && checkBlock(blockC, -1, 1) && checkBlock(blockD, -2, 2)) || (f == 3 && checkBlock(blockA, -1, 1) && checkBlock(blockC, 1, 1) && checkBlock(blockD, 2, 2)) || (f == 4 && checkBlock(blockA, 1, 1) && checkBlock(blockC, 1, -1) && checkBlock(blockD, 2, -2))) {
+                    rotateJBlock(form, f);
+                    break;
+                }
+            case "l":
+                //
+                //
+                //
+                //
+                if (() || () || () || ()) {
+                    rotateLBlock(form, f);
+                    break;
+                }
+        }
+    }
+
+    public static void moveDown (Form form) {
+
+    }
 
     public static void moveLeft (Form form) {
         if (form.blockA.getX() - moveSpeed >= 0 && form.blockB.getX() - moveSpeed >= 0 && form.blockC.getX() - moveSpeed >= 0 && form.blockD.getX() - moveSpeed >= 0) {
@@ -42,7 +69,6 @@ public class Controller {
         }
     }
 
-    
     public static Form makeRect() {
         int block = (int) (Math.random() * 100);
         String name;
@@ -82,6 +108,49 @@ public class Controller {
         }
     }
 
+    private static void shiftBlockRight(Rectangle block) {
+        if (block.getX() + moveSpeed <= xMax - blockSize) {
+            block.setX(block.getX() + moveSpeed);
+        }
+    }
+
+    private static void shiftBlockUp(Rectangle block) {
+        if (block.getY() - moveSpeed > 0) {
+            block.setY(block.getY() - moveSpeed);
+        }
+    }
+
+    private static void shiftBlockDown(Rectangle block) {
+        if (block.getY() + moveSpeed < yMax) {
+            block.setY(block.getY() + moveSpeed);
+        }
+    }
+
+    private static void shiftBlockLeft(Rectangle block) {
+        if (block.getX() - moveSpeed > 0) {
+            block.setY(block.getY() - moveSpeed);
+        }
+    }
+
+    private static boolean checkBlock(Rectangle block, int x, int y) {
+        boolean yB = false;
+        boolean xB = false;
+        if (x >= 0) {
+            xB = block.getX() + x*moveSpeed <= xMax - blockSize;
+        }
+        else {
+            xB = block.getX() + x*moveSpeed >= 0;
+        }
+        if (y >= 0) {
+            yB = block.getY() + y*moveSpeed > 0;
+        }
+        else {
+            yB = block.getY() + y*moveSpeed < yMax;
+        }
+
+        return xB && yB && playGrid[((int)block.getX()/blockSize) + x][((int)block.getY()/blockSize) - y] == 0;
+    }
+
     public static Form createJBlock(Rectangle blockA, Rectangle blockB, Rectangle blockC, Rectangle blockD, String name) {
         blockA.setX(xMax / 2 - blockSize);
         blockB.setX(xMax / 2 - blockSize);
@@ -92,6 +161,53 @@ public class Controller {
         blockD.setY(blockSize);
 
         return new Form(blockA, blockB, blockC, blockD, name);
+    }
+
+    private static void rotateJBlock(Form form, int f) {
+        if (f == 1) {
+            shiftBlockRight(form.blockA);
+            shiftBlockDown(form.blockA);
+            shiftBlockDown(form.blockC);
+            shiftBlockLeft(form.blockC);
+            shiftBlockDown(form.blockD);
+            shiftBlockDown(form.blockD);
+            shiftBlockLeft(form.blockD);
+            shiftBlockLeft(form.blockD);
+            form.changeForm();
+        }
+        else if (f == 2) {
+            shiftBlockDown(form.blockA);
+            shiftBlockLeft(form.blockA);
+            shiftBlockLeft(form.blockC);
+            shiftBlockUp(form.blockC);
+            shiftBlockLeft(form.blockD);
+            shiftBlockLeft(form.blockD);
+            shiftBlockUp(form.blockD);
+            shiftBlockUp(form.blockD);
+            form.changeForm();
+        }
+        else if (f == 3) {
+            shiftBlockLeft(form.blockA);
+            shiftBlockUp(form.blockA);
+            shiftBlockUp(form.blockC);
+            shiftBlockRight(form.blockC);
+            shiftBlockUp(form.blockD);
+            shiftBlockUp(form.blockD);
+            shiftBlockRight(form.blockD);
+            shiftBlockRight(form.blockD);
+            form.changeForm();
+        }
+        else if (f == 4) {
+            shiftBlockUp(form.blockA);
+            shiftBlockRight(form.blockA);
+            shiftBlockRight(form.blockC);
+            shiftBlockDown(form.blockC);
+            shiftBlockRight(form.blockD);
+            shiftBlockRight(form.blockD);
+            shiftBlockDown(form.blockD);
+            shiftBlockDown(form.blockD);
+            form.changeForm();
+        }
     }
 
     public static Form createLBlock(Rectangle blockA, Rectangle blockB, Rectangle blockC, Rectangle blockD, String name) {
@@ -106,6 +222,10 @@ public class Controller {
         return new Form(blockA, blockB, blockC, blockD, name);
     }
 
+    private static void rotateLBlock(Form form, int f) {
+
+    }
+
     public static Form createOBlock(Rectangle blockA, Rectangle blockB, Rectangle blockC, Rectangle blockD, String name) {
         blockA.setX(xMax / 2 - blockSize);
         blockB.setX(xMax / 2);
@@ -115,6 +235,10 @@ public class Controller {
         blockD.setY(blockSize);
 
         return new Form(blockA, blockB, blockC, blockD, name);
+    }
+
+    private static void rotateOBlock(Form form, int f) {
+
     }
 
     public static Form createSBlock(Rectangle blockA, Rectangle blockB, Rectangle blockC, Rectangle blockD, String name) {
@@ -128,6 +252,10 @@ public class Controller {
         return new Form(blockA, blockB, blockC, blockD, name);
     }
 
+    private static void rotateSBlock(Form form, int f) {
+
+    }
+
     public static Form createTBlock(Rectangle blockA, Rectangle blockB, Rectangle blockC, Rectangle blockD, String name) {
         blockA.setX(xMax / 2 - blockSize);
         blockB.setX(xMax / 2);
@@ -137,6 +265,10 @@ public class Controller {
         blockD.setY(blockSize);
 
         return new Form(blockA, blockB, blockC, blockD, name);
+    }
+
+    private static void rotateTBlock(Form form, int f) {
+
     }
 
     public static Form createZBlock(Rectangle blockA, Rectangle blockB, Rectangle blockC, Rectangle blockD, String name) {
@@ -150,6 +282,10 @@ public class Controller {
         return new Form(blockA, blockB, blockC, blockD, name);
     }
 
+    private static void rotateZBlock(Form form, int f) {
+
+    }
+
     public static Form createIBlock(Rectangle blockA, Rectangle blockB, Rectangle blockC, Rectangle blockD, String name) {
         blockA.setX(xMax / 2 - blockSize - blockSize);
         blockB.setX(xMax / 2 - blockSize);
@@ -158,4 +294,9 @@ public class Controller {
 
         return new Form(blockA, blockB, blockC, blockD, name);
     }
+
+    private static void rotateIBlock(Form form, int f) {
+
+    }
+
 }
