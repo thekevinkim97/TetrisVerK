@@ -35,14 +35,32 @@ public class Controller {
             case "j":
                 if ((f == 1 && checkBlock(blockA, 1, -1) && checkBlock(blockC, -1, -1) && checkBlock(blockD, -2, -2)) || (f == 2 && checkBlock(blockA, -1, -1) && checkBlock(blockC, -1, 1) && checkBlock(blockD, -2, 2)) || (f == 3 && checkBlock(blockA, -1, 1) && checkBlock(blockC, 1, 1) && checkBlock(blockD, 2, 2)) || (f == 4 && checkBlock(blockA, 1, 1) && checkBlock(blockC, 1, -1) && checkBlock(blockD, 2, -2))) {
                     rotateJBlock(form, f);
-                    break;
                 }
+                break;
             case "l":
                 if ((f == 1 && checkBlock(blockA, 1, -1) && checkBlock(blockB, 2, 2) && checkBlock(blockC, 1, 1)) || (f == 2 && checkBlock(blockA, -1, -1) && checkBlock(blockB, 2, -2) && checkBlock(blockC, 1, -1)) || (f == 3 && checkBlock(blockA, -1, 1) && checkBlock(blockB, -2, -2) && checkBlock(blockC, -1, -1)) || (f == 4 && checkBlock(blockA, 1, 1) && checkBlock(blockB, -2, 2) && checkBlock(blockC, -1, 1))) {
                     rotateLBlock(form, f);
-                    break;
                 }
+                break;
             case "o":
+                break;
+            case "s":
+                if ((f == 1 && checkBlock(blockA, -1, -1) && checkBlock(blockC, -1, 1) && checkBlock(blockD, 0, 2)) || (f == 2 && checkBlock(blockA, 1, 1) && checkBlock(blockC, 1, -1) && checkBlock(blockD, 0, -2)) || (f == 3 && checkBlock(blockA, -1, -1) && checkBlock(blockC, -1, 1) && checkBlock(blockD, 0, 2)) || (f == 4 && checkBlock(blockA, 1, 1) && checkBlock(blockC, 1, -1) && checkBlock(blockD, 0, -2))) {
+                    rotateSBlock(form, f);
+                }
+                break;
+            case "t":
+                if ((f == 1 && checkBlock(blockA, 1, 1) && checkBlock(blockC, -1, 1) && checkBlock(blockD, -1, -1)) || (f == 2 && checkBlock(blockA, 1, -1) && checkBlock(blockC, 1, 1) && checkBlock(blockD, -1, 1)) || (f == 3 && checkBlock(blockA, -1, -1) && checkBlock(blockC, 1, -1) && checkBlock(blockD, 1, 1)) || (f == 4 && checkBlock(blockA, -1, 1) && checkBlock(blockC, -1, -1) && checkBlock(blockD, 1, -1))) {
+                    rotateTBlock(form, f);
+                }
+                break;
+            case "z":
+                if (((f == 1 || f == 3) && checkBlock(blockB, 1, 1) && checkBlock(blockC, -1, 1) && checkBlock(blockD, -2, 0)) || ((f == 2 || f == 4) && checkBlock(blockB, -1, -1) && checkBlock(blockC, 1, -1) && checkBlock(blockD, 2, 0))) {
+                    rotateZBlock(form, f);
+                }
+                break;
+            case "i":
+                
                 break;
         }
     }
@@ -278,10 +296,6 @@ public class Controller {
         return new Form(blockA, blockB, blockC, blockD, name);
     }
 
-    private static void rotateOBlock(Form form, int f) {
-
-    }
-
     public static Form createSBlock(Rectangle blockA, Rectangle blockB, Rectangle blockC, Rectangle blockD, String name) {
         blockA.setX(xMax / 2 + blockSize);
         blockB.setX(xMax / 2);
@@ -294,7 +308,24 @@ public class Controller {
     }
 
     private static void rotateSBlock(Form form, int f) {
-
+        if (f == 1 || f == 3) {
+            shiftBlockDown(form.blockA);
+            shiftBlockLeft(form.blockA);
+            shiftBlockLeft(form.blockC);
+            shiftBlockUp(form.blockC);
+            shiftBlockUp(form.blockD);
+            shiftBlockUp(form.blockD);
+            form.changeForm();
+        }
+        else if (f == 2 || f == 4) {
+            shiftBlockUp(form.blockA);
+            shiftBlockRight(form.blockA);
+            shiftBlockRight(form.blockC);
+            shiftBlockDown(form.blockC);
+            shiftBlockDown(form.blockD);
+            shiftBlockDown(form.blockD);
+            form.changeForm();
+        }
     }
 
     public static Form createTBlock(Rectangle blockA, Rectangle blockB, Rectangle blockC, Rectangle blockD, String name) {
@@ -309,7 +340,42 @@ public class Controller {
     }
 
     private static void rotateTBlock(Form form, int f) {
-
+        if (f == 1) {
+            shiftBlockUp(form.blockA);
+            shiftBlockRight(form.blockA);
+            shiftBlockLeft(form.blockC);
+            shiftBlockUp(form.blockC);
+            shiftBlockDown(form.blockD);
+            shiftBlockLeft(form.blockD);
+            form.changeForm();
+        }
+        else if (f == 2) {
+            shiftBlockRight(form.blockA);
+            shiftBlockDown(form.blockA);
+            shiftBlockUp(form.blockC);
+            shiftBlockRight(form.blockC);
+            shiftBlockLeft(form.blockD);
+            shiftBlockUp(form.blockD);
+            form.changeForm();
+        }
+        else if (f == 3) {
+            shiftBlockDown(form.blockA);
+            shiftBlockLeft(form.blockA);
+            shiftBlockRight(form.blockC);
+            shiftBlockDown(form.blockC);
+            shiftBlockUp(form.blockD);
+            shiftBlockRight(form.blockD);
+            form.changeForm();
+        }
+        else if (f == 4) {
+            shiftBlockLeft(form.blockA);
+            shiftBlockUp(form.blockA);
+            shiftBlockDown(form.blockC);
+            shiftBlockLeft(form.blockC);
+            shiftBlockRight(form.blockD);
+            shiftBlockDown(form.blockD);
+            form.changeForm();
+        }
     }
 
     public static Form createZBlock(Rectangle blockA, Rectangle blockB, Rectangle blockC, Rectangle blockD, String name) {
@@ -324,7 +390,24 @@ public class Controller {
     }
 
     private static void rotateZBlock(Form form, int f) {
-
+        if (f == 1 || f == 3) {
+            shiftBlockUp(form.blockB);
+            shiftBlockRight(form.blockB);
+            shiftBlockLeft(form.blockC);
+            shiftBlockUp(form.blockC);
+            shiftBlockLeft(form.blockD);
+            shiftBlockLeft(form.blockD);
+            form.changeForm();
+        }
+        else if (f == 2 || f == 4) {
+            shiftBlockDown(form.blockB);
+            shiftBlockLeft(form.blockB);
+            shiftBlockRight(form.blockC);
+            shiftBlockDown(form.blockC);
+            shiftBlockRight(form.blockD);
+            shiftBlockRight(form.blockD);
+            form.changeForm();
+        }
     }
 
     public static Form createIBlock(Rectangle blockA, Rectangle blockB, Rectangle blockC, Rectangle blockD, String name) {
