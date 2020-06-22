@@ -60,7 +60,11 @@ public class Controller {
                 }
                 break;
             case "i":
-                
+                //(f == 1 || f == 3) && (checkBlock(blockA, 2, 2) && checkBlock(blockB, 1, 1) && checkBlock(blockD, -1, -1))
+                //(f == 2 || f == 4) && (checkBlock(blockA, -2, -2) && checkBlock(blockB, -1, -1) && checkBlock(blockD, 1, 1))
+                if (((f == 1 || f == 3) && (checkBlock(blockA, 2, 2) && checkBlock(blockB, 1, 1) && checkBlock(blockD, -1, -1))) || ((f == 2 || f == 4) && (checkBlock(blockA, -2, -2) && checkBlock(blockB, -1, -1) && checkBlock(blockD, 1, 1)))) {
+                    rotateIBlock(form, f);
+                }
                 break;
         }
     }
@@ -420,7 +424,28 @@ public class Controller {
     }
 
     private static void rotateIBlock(Form form, int f) {
-
+        if (f == 1 || f == 3) {
+            shiftBlockUp(form.blockA);
+            shiftBlockUp(form.blockA);
+            shiftBlockRight(form.blockA);
+            shiftBlockRight(form.blockA);
+            shiftBlockUp(form.blockB);
+            shiftBlockRight(form.blockB);
+            shiftBlockDown(form.blockD);
+            shiftBlockLeft(form.blockD);
+            form.changeForm();
+        }
+        else if (f == 2 || f == 4) {
+            shiftBlockDown(form.blockA);
+            shiftBlockDown(form.blockA);
+            shiftBlockLeft(form.blockA);
+            shiftBlockLeft(form.blockA);
+            shiftBlockDown(form.blockB);
+            shiftBlockLeft(form.blockB);
+            shiftBlockUp(form.blockD);
+            shiftBlockRight(form.blockD);
+            form.changeForm();
+        }
     }
 
 }
