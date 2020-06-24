@@ -3,14 +3,17 @@ package App;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.event.EventHandler;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -28,7 +31,9 @@ public class Tetris extends Application {
     private static Scene scene = new Scene(group, xMax + 150, yMax);
 
     public static int score = 0;
+    public static int totalLines = 0;
     public static Text scoreText;
+    public static Text totalLinesText;
     private static boolean game = true;
     private static Form nextObj = Controller.makeRect();
 
@@ -56,6 +61,13 @@ public class Tetris extends Application {
         scoreText.setY(50);
         scoreText.setX(xMax + 5);
         scoreText.setFill(Color.RED);
+
+        totalLinesText = new Text("Total Lines: ");
+        scoreText.setStyle("-fx-font: 24 arials;");
+        scoreText.setY(50);
+        scoreText.setX(xMax + 5);
+        scoreText.setFill(Color.BLUEVIOLET);
+
         group.getChildren().addAll(scoreText, line);
     }
 
@@ -93,8 +105,9 @@ public class Tetris extends Application {
                         }
 
                         if (game) {
-                            Controller.moveDown(object);
+                            Controller.shiftBlockDown(object, group, score, totalLines, nextObj, object);
                             scoreText.setText("Score: " + Integer.toString(score));
+                            totalLinesText.setText("Total Lines: " + Integer.toString(totalLines));
                         }
                     }
                 });
@@ -115,7 +128,7 @@ public class Tetris extends Application {
         game = false;
     }
 
-    private void moveOnKeyPress(Form form) {
+    public void moveOnKeyPress(Form form) {
         scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
             @Override
             public void handle(KeyEvent keyEvent) {
@@ -127,7 +140,7 @@ public class Tetris extends Application {
                         Controller.moveTurn(form);
                         break;
                     case DOWN:
-                        Controller.moveDown(form);
+                        Controller.shiftBlockDown(form, group, score, totalLines, nextObj, object);
                         break;
                     case LEFT:
                         Controller.moveLeft(form);

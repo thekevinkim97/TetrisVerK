@@ -1,6 +1,10 @@
 package App;
 
+import javafx.scene.Node;
+import javafx.scene.layout.Pane;
 import javafx.scene.shape.*;
+
+import java.util.ArrayList;
 
 public class Controller {
 
@@ -9,7 +13,9 @@ public class Controller {
     public static int xMax = Tetris.xMax;
     public static int yMax = Tetris.yMax;
     public static int [][] playGrid = Tetris.playGrid;
+    public static Tetris tetris = new Tetris();
 
+    //Move Right
     public static void moveRight (Form form) {
         if (form.blockA.getX() + moveSpeed <= xMax - blockSize && form.blockB.getX() + moveSpeed <= xMax - blockSize && form.blockC.getX() + moveSpeed <= xMax - blockSize && form.blockD.getX() + moveSpeed <= xMax - blockSize) {
             int moveA = playGrid[((int) form.blockA.getX() / blockSize) + 1][((int) form.blockA.getY() / blockSize)];
@@ -25,6 +31,7 @@ public class Controller {
             }
         }
     }
+    //Rotation
     public static void moveTurn (Form form) {
         int f = form.form;
         Rectangle blockA = form.blockA;
@@ -68,11 +75,7 @@ public class Controller {
                 break;
         }
     }
-
-    public static void moveDown (Form form) {
-
-    }
-
+    //Move Left
     public static void moveLeft (Form form) {
         if (form.blockA.getX() - moveSpeed >= 0 && form.blockB.getX() - moveSpeed >= 0 && form.blockC.getX() - moveSpeed >= 0 && form.blockD.getX() - moveSpeed >= 0) {
             int moveA = playGrid[((int) form.blockA.getX() / blockSize) - 1][((int) form.blockA.getY() / blockSize)];
@@ -140,9 +143,39 @@ public class Controller {
         }
     }
 
-    private static void shiftBlockDown(Rectangle block) {
+    public static void shiftBlockDown(Rectangle block) {
         if (block.getY() + moveSpeed < yMax) {
             block.setY(block.getY() + moveSpeed);
+        }
+    }
+
+    //If can't shift down
+    public static void shiftBlockDown(Form form, Pane group, int score, int totalLines, Form nextObj, Form object) {
+        if (form.blockA.getY() == yMax - blockSize || form.blockB.getY() == yMax - blockSize || form.blockC.getY() == yMax - blockSize || form.blockD.getY() == yMax - blockSize || moveBlock(form)) {
+            playGrid[(int) form.blockA.getX() / blockSize][(int) form.blockA.getY() / blockSize] = 1;
+            playGrid[(int) form.blockB.getX() / blockSize][(int) form.blockB.getY() / blockSize] = 1;
+            playGrid[(int) form.blockC.getX() / blockSize][(int) form.blockC.getY() / blockSize] = 1;
+            playGrid[(int) form.blockD.getX() / blockSize][(int) form.blockD.getY() / blockSize] = 1;
+            deleteCompleteRows(group, score, totalLines);
+
+            Form a = nextObj;
+            nextObj = Controller.makeRect();
+            object = a;
+            group.getChildren().addAll(a.blockA, a.blockB, a.blockC, a.blockD);
+            tetris.moveOnKeyPress(a);
+        }
+
+        if (form.blockA.getY() + moveSpeed < yMax && form.blockB.getY() + moveSpeed < yMax && form.blockC.getY() + moveSpeed < yMax && form.blockD.getY() + moveSpeed < yMax) {
+            int moveA = playGrid[(int) form.blockA.getX() / blockSize][((int) form.blockA.getY() / blockSize) + 1];
+            int moveB = playGrid[(int) form.blockB.getX() / blockSize][((int) form.blockB.getY() / blockSize) + 1];
+            int moveC = playGrid[(int) form.blockC.getX() / blockSize][((int) form.blockC.getY() / blockSize) + 1];
+            int moveD = playGrid[(int) form.blockD.getX() / blockSize][((int) form.blockD.getY() / blockSize) + 1];
+            if (moveA == 0 && moveA == moveB && moveB == moveC && moveC == moveD) {
+                form.blockA.setY(form.blockA.getY() + moveSpeed);
+                form.blockB.setY(form.blockB.getY() + moveSpeed);
+                form.blockC.setY(form.blockC.getY() + moveSpeed);
+                form.blockD.setY(form.blockD.getY() + moveSpeed);
+            }
         }
     }
 
@@ -169,6 +202,87 @@ public class Controller {
         }
 
         return xB && yB && playGrid[((int)block.getX()/blockSize) + x][((int)block.getY()/blockSize) - y] == 0;
+    }
+
+    private static boolean moveBlock(Form form) {
+        if ((playGrid[(int) form.blockA.getX() / blockSize][((int) form.blockA.getY() / blockSize) + 1] == 1) || (playGrid[(int) form.blockB.getX() / blockSize][((int) form.blockB.getY() / blockSize) + 1] == 1) || (playGrid[(int) form.blockC.getX() / blockSize][((int) form.blockC.getY() / blockSize) + 1] == 1) || (playGrid[(int) form.blockD.getX() / blockSize][((int) form.blockD.getY() / blockSize) + 1] == 1)) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+
+    private static void deleteCompleteRows(Pane pane, int score, int totalLines) {
+        ArrayList<Node> rects = new ArrayList<Node>();
+        ArrayList<Integer> lines = new ArrayList<Integer>();
+        ArrayList<Node> newRects = new ArrayList<Node>();
+        int filledSquares = 0;
+
+        //check which lines are full
+        for (int i = 0; i < playGrid[0].length; i++) {
+            for (int j = 0; j < playGrid.length; j++) {
+                if (playGrid[j][i] == 1) {
+                    filledSquares++;
+                }
+            }
+            if (filledSquares == playGrid.length) {
+                lines.add(i);
+            }
+            filledSquares = 0;
+        }
+
+        //deleting block from row
+        if (lines.size() > 0) {
+            do {
+                for (Node node: pane.getChildren()) {
+                    if (node instanceof Rectangle) {
+                        rects.add(node);
+                    }
+                }
+                score += 50;
+                totalLines++;
+
+                //deleting block on row
+                for (Node node : rects) {
+                    Rectangle a = (Rectangle) node;
+                    if (a.getY() == lines.get(0 * blockSize)) {
+                        playGrid[(int) a.getX() / blockSize][(int) a.getY() / blockSize] = 0;
+                        pane.getChildren().remove(node);
+                    }
+                    else {
+                        newRects.add(node);
+                    }
+                }
+
+                for (Node node: newRects) {
+                    Rectangle a = (Rectangle) node;
+                    if (a.getY() == lines.get(0 * blockSize)) {
+                        playGrid[(int) a.getX() / blockSize][(int) a.getY() / blockSize] = 0;
+                        pane.getChildren().remove(node);
+                    }
+                }
+
+                lines.remove(0);
+                rects.clear();
+                newRects.clear();
+                for (Node node : pane.getChildren()) {
+                    if (node instanceof Rectangle) {
+                        rects.add(node);
+                    }
+                }
+
+                for (Node node : rects) {
+                    Rectangle a = (Rectangle) node;
+                    try {
+                        playGrid[(int) a.getX() / blockSize][(int) a.getY() / blockSize] = 1;
+                    } catch (ArrayIndexOutOfBoundsException e) {
+                    }
+                }
+                rects.clear();
+            }
+            while (lines.size() > 0);
+        }
     }
 
     public static Form createJBlock(Rectangle blockA, Rectangle blockB, Rectangle blockC, Rectangle blockD, String name) {
