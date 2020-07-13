@@ -28,7 +28,6 @@ public class Form {
         this.name = name;
 
         establishPieceColor(name);
-        setPieceColor();
     }
 
     public Color getColor() {
@@ -48,31 +47,33 @@ public class Form {
 
     public void establishPieceColor(String name) {
         switch (name) {
-            case "red":
+            case "j":
                 color = Color.MAROON;
                 break;
-            case "green":
+            case "l":
                 color = Color.OLIVE;
                 break;
-            case "blue":
+            case "o":
                 color = Color.SLATEBLUE;
                 break;
-            case "yellow":
-                color = Color.DARKGOLDENROD;
+            case "s":
+                color = Color.BROWN;
                 break;
-            case "purple":
+            case "t":
                 color = Color.DARKVIOLET;
                 break;
-            case "orange":
+            case "z":
                 color = Color.DARKORANGE;
                 break;
-            case "grey":
+            case "i":
                 color = Color.DARKGRAY;
                 break;
         }
+
+        setPieceColor(color);
     }
 
-    public void setPieceColor() {
+    public void setPieceColor(Color color) {
         blockA.setFill(color);
         blockB.setFill(color);
         blockC.setFill(color);

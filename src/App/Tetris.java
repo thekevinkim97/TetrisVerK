@@ -30,9 +30,12 @@ public class Tetris extends Application {
     private static Form object;
     private static Scene scene = new Scene(group, xMax + 150, yMax);
 
-    public static int top = 0;
+    private static int top = 0;
     public static int score = 0;
-    public static int totalLines = 0;
+    private static int totalLines = 0;
+
+    public Text scoreText;
+    public Text totalLinesText;
 
     private static boolean game = true;
     private static Form nextObj = Controller.makeRect();
@@ -48,25 +51,25 @@ public class Tetris extends Application {
         }
         createScoreText();
         createStage(stage);
-
+        timerFall();
     }
 
     public void createScoreText() {
         Line line = new Line(xMax, 0, xMax, yMax);
 
-        Text scoreText = new Text("Score: ");
-        scoreText.setStyle("-fx-font: 24 arials;");
+        scoreText = new Text("Score: ");
+        scoreText.setStyle("-fx-font: 24 arial;");
         scoreText.setY(50);
         scoreText.setX(xMax + 5);
         scoreText.setFill(Color.RED);
 
-        Text totalLinesText = new Text("Total Lines: ");
-        scoreText.setStyle("-fx-font: 24 arials;");
-        scoreText.setY(50);
-        scoreText.setX(xMax + 5);
-        scoreText.setFill(Color.BLUEVIOLET);
+        totalLinesText = new Text("Total Lines: ");
+        totalLinesText.setStyle("-fx-font: 24 arial;");
+        totalLinesText.setY(100);
+        totalLinesText.setX(xMax + 5);
+        totalLinesText.setFill(Color.BLUEVIOLET);
 
-        group.getChildren().addAll(scoreText, line);
+        group.getChildren().addAll(scoreText, line, totalLinesText);
     }
 
     public void createStage(Stage stage) {
@@ -80,7 +83,7 @@ public class Tetris extends Application {
         stage.show();
     }
 
-    public void timer() {
+    public void timerFall() {
         Timer fall = new Timer();
         TimerTask task = new TimerTask() {
             @Override
@@ -95,9 +98,10 @@ public class Tetris extends Application {
                             top = 0;
                         }
 
+                        //Game Over
                         if (top == 2) {
                             Text gameOver = new Text("G A M E   O V E R");
-                            gameOver.setFill(Color.BLUEVIOLET);
+                            gameOver.setFill(Color.BLACK);
                             gameOver.setStyle("-fx-font: 80 arial;");
                             gameOver.setX(10);
                             gameOver.setY(250);
@@ -112,13 +116,14 @@ public class Tetris extends Application {
 
                         if (game) {
                             moveDown(object);
-                            //scoreText totalLinesText
+                            scoreText.setText("Score: " + score);
+                            totalLinesText.setText("Total Lines: " + totalLines);
                         }
                     }
                 });
             }
         };
-        fall.schedule(task, 0, 300);
+        fall.schedule(task, 1, 300);
     }
 
     private void moveOnKeyPress(Form form) {
@@ -296,19 +301,19 @@ public class Tetris extends Application {
     }
 
     private boolean checkBlock(Rectangle block, int x, int y) {
-        boolean yB = false;
-        boolean xB = false;
+        boolean yB;
+        boolean xB;
         if (x >= 0) {
-            xB = block.getX() + x*moveSpeed <= xMax - blockSize;
+            xB = block.getX() + x * moveSpeed <= xMax - blockSize;
         }
         else {
-            xB = block.getX() + x*moveSpeed >= 0;
+            xB = block.getX() + x * moveSpeed >= 0;
         }
         if (y >= 0) {
-            yB = block.getY() + y*moveSpeed > 0;
+            yB = block.getY() - y * moveSpeed > 0;
         }
         else {
-            yB = block.getY() + y*moveSpeed < yMax;
+            yB = block.getY() + y * moveSpeed < yMax;
         }
 
         return xB && yB && playGrid[((int)block.getX()/blockSize) + x][((int)block.getY()/blockSize) - y] == 0;
@@ -337,7 +342,7 @@ public class Tetris extends Application {
         }
     }
 
-    private void shiftBlockDown(Rectangle rect) {
+    private void moveDown(Rectangle rect) {
         if (rect.getY() + moveSpeed < yMax) {
             rect.setY(rect.getY() + moveSpeed);
         }
@@ -354,17 +359,17 @@ public class Tetris extends Application {
     private void rotateJBlock(Form form, int f) {
         if (f == 1) {
             shiftBlockRight(form.blockA);
-            shiftBlockDown(form.blockA);
-            shiftBlockDown(form.blockC);
+            moveDown(form.blockA);
+            moveDown(form.blockC);
             shiftBlockLeft(form.blockC);
-            shiftBlockDown(form.blockD);
-            shiftBlockDown(form.blockD);
+            moveDown(form.blockD);
+            moveDown(form.blockD);
             shiftBlockLeft(form.blockD);
             shiftBlockLeft(form.blockD);
             form.changeForm();
         }
         else if (f == 2) {
-            shiftBlockDown(form.blockA);
+            moveDown(form.blockA);
             shiftBlockLeft(form.blockA);
             shiftBlockLeft(form.blockC);
             shiftBlockUp(form.blockC);
@@ -389,11 +394,11 @@ public class Tetris extends Application {
             shiftBlockUp(form.blockA);
             shiftBlockRight(form.blockA);
             shiftBlockRight(form.blockC);
-            shiftBlockDown(form.blockC);
+            moveDown(form.blockC);
             shiftBlockRight(form.blockD);
             shiftBlockRight(form.blockD);
-            shiftBlockDown(form.blockD);
-            shiftBlockDown(form.blockD);
+            moveDown(form.blockD);
+            moveDown(form.blockD);
             form.changeForm();
         }
     }
@@ -401,7 +406,7 @@ public class Tetris extends Application {
     private void rotateLBlock(Form form, int f) {
         if (f == 1) {
             shiftBlockRight(form.blockA);
-            shiftBlockDown(form.blockA);
+            moveDown(form.blockA);
             shiftBlockUp(form.blockB);
             shiftBlockUp(form.blockB);
             shiftBlockRight(form.blockB);
@@ -411,24 +416,24 @@ public class Tetris extends Application {
             form.changeForm();
         }
         else if (f == 2) {
-            shiftBlockUp(form.blockA);
+            moveDown(form.blockA);
             shiftBlockLeft(form.blockA);
             shiftBlockRight(form.blockB);
             shiftBlockRight(form.blockB);
-            shiftBlockDown(form.blockB);
-            shiftBlockDown(form.blockB);
+            moveDown(form.blockB);
+            moveDown(form.blockB);
             shiftBlockRight(form.blockC);
-            shiftBlockDown(form.blockC);
+            moveDown(form.blockC);
             form.changeForm();
         }
         else if (f == 3) {
             shiftBlockLeft(form.blockA);
             shiftBlockUp(form.blockA);
-            shiftBlockDown(form.blockB);
-            shiftBlockDown(form.blockB);
+            moveDown(form.blockB);
+            moveDown(form.blockB);
             shiftBlockLeft(form.blockB);
             shiftBlockLeft(form.blockB);
-            shiftBlockDown(form.blockC);
+            moveDown(form.blockC);
             shiftBlockLeft(form.blockC);
             form.changeForm();
         }
@@ -447,7 +452,7 @@ public class Tetris extends Application {
 
     private void rotateSBlock(Form form, int f) {
         if (f == 1 || f == 3) {
-            shiftBlockDown(form.blockA);
+            moveDown(form.blockA);
             shiftBlockLeft(form.blockA);
             shiftBlockLeft(form.blockC);
             shiftBlockUp(form.blockC);
@@ -459,9 +464,9 @@ public class Tetris extends Application {
             shiftBlockUp(form.blockA);
             shiftBlockRight(form.blockA);
             shiftBlockRight(form.blockC);
-            shiftBlockDown(form.blockC);
-            shiftBlockDown(form.blockD);
-            shiftBlockDown(form.blockD);
+            moveDown(form.blockC);
+            moveDown(form.blockD);
+            moveDown(form.blockD);
             form.changeForm();
         }
     }
@@ -472,13 +477,13 @@ public class Tetris extends Application {
             shiftBlockRight(form.blockA);
             shiftBlockLeft(form.blockC);
             shiftBlockUp(form.blockC);
-            shiftBlockDown(form.blockD);
+            moveDown(form.blockD);
             shiftBlockLeft(form.blockD);
             form.changeForm();
         }
         else if (f == 2) {
             shiftBlockRight(form.blockA);
-            shiftBlockDown(form.blockA);
+            moveDown(form.blockA);
             shiftBlockUp(form.blockC);
             shiftBlockRight(form.blockC);
             shiftBlockLeft(form.blockD);
@@ -486,10 +491,10 @@ public class Tetris extends Application {
             form.changeForm();
         }
         else if (f == 3) {
-            shiftBlockDown(form.blockA);
+            moveDown(form.blockA);
             shiftBlockLeft(form.blockA);
             shiftBlockRight(form.blockC);
-            shiftBlockDown(form.blockC);
+            moveDown(form.blockC);
             shiftBlockUp(form.blockD);
             shiftBlockRight(form.blockD);
             form.changeForm();
@@ -497,10 +502,10 @@ public class Tetris extends Application {
         else if (f == 4) {
             shiftBlockLeft(form.blockA);
             shiftBlockUp(form.blockA);
-            shiftBlockDown(form.blockC);
+            moveDown(form.blockC);
             shiftBlockLeft(form.blockC);
             shiftBlockRight(form.blockD);
-            shiftBlockDown(form.blockD);
+            moveDown(form.blockD);
             form.changeForm();
         }
     }
@@ -516,10 +521,10 @@ public class Tetris extends Application {
             form.changeForm();
         }
         else if (f == 2 || f == 4) {
-            shiftBlockDown(form.blockB);
+            moveDown(form.blockB);
             shiftBlockLeft(form.blockB);
             shiftBlockRight(form.blockC);
-            shiftBlockDown(form.blockC);
+            moveDown(form.blockC);
             shiftBlockRight(form.blockD);
             shiftBlockRight(form.blockD);
             form.changeForm();
@@ -534,16 +539,16 @@ public class Tetris extends Application {
             shiftBlockRight(form.blockA);
             shiftBlockUp(form.blockB);
             shiftBlockRight(form.blockB);
-            shiftBlockDown(form.blockD);
+            moveDown(form.blockD);
             shiftBlockLeft(form.blockD);
             form.changeForm();
         }
         else if (f == 2 || f == 4) {
-            shiftBlockDown(form.blockA);
-            shiftBlockDown(form.blockA);
+            moveDown(form.blockA);
+            moveDown(form.blockA);
             shiftBlockLeft(form.blockA);
             shiftBlockLeft(form.blockA);
-            shiftBlockDown(form.blockB);
+            moveDown(form.blockB);
             shiftBlockLeft(form.blockB);
             shiftBlockUp(form.blockD);
             shiftBlockRight(form.blockD);
